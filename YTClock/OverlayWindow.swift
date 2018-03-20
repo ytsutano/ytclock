@@ -37,13 +37,13 @@ class OverlayWindow : NSWindow {
 
     override func awakeFromNib() {
         // Set the window level and color.
-        self.backgroundColor = NSColor.clear
+        backgroundColor = NSColor.clear
         alphaValue = 0.0
         isOpaque = false
         level = .statusBar
 
         // Allow mouse enter/exit event to be generated.
-        self.contentView?.addTrackingRect(self.contentView!.bounds, owner: self, userData: nil, assumeInside: false)
+        contentView?.addTrackingRect(contentView!.bounds, owner: self, userData: nil, assumeInside: false)
 
         // Make the window draggable.
         isMovableByWindowBackground = true
