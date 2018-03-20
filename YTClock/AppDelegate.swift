@@ -9,16 +9,35 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
-
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     @IBOutlet weak var window: NSWindow!
+    @IBOutlet weak var clockView: ClockView!
+
+    var miniwindowTimer: Timer?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
+        window.delegate = self
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
     }
 
+    func windowDidMiniaturize(_ notification: Notification) {
+        clockView.isSecondHandHidden = true
+
+        updateMiniwindow()
+        miniwindowTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(updateMiniwindow), userInfo: nil, repeats: true)
+        miniwindowTimer?.tolerance = 3.0
+    }
+
+    func windowDidDeminiaturize(_ notification: Notification) {
+        clockView.isSecondHandHidden = false
+
+        miniwindowTimer?.invalidate()
+    }
+
+    @objc func updateMiniwindow() {
+        // Update the clock image in the Dock.
+        window.miniwindowImage = nil
+    }
 }

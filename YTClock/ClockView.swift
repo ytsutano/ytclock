@@ -18,6 +18,15 @@ class ClockView : NSView, CALayerDelegate {
     private var center = CGPoint(x: 64, y: 64)
     private var radius = CGFloat(60)
 
+    var isSecondHandHidden : Bool {
+        get {
+            return secondHandLayer.isHidden
+        }
+        set {
+            secondHandLayer.isHidden = newValue
+        }
+    }
+
     private func addAndInitializeLayer(_ newLayer: CALayer, withShadow: Bool) {
         newLayer.delegate = self
         newLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -44,25 +53,9 @@ class ClockView : NSView, CALayerDelegate {
         addAndInitializeLayer(secondHandLayer, withShadow: false)
         addAndInitializeLayer(capNutLayer, withShadow: false)
 
-        self.repositionClockElements()
-        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(onTimer), userInfo: nil, repeats: true)
-    }
-
-    private var timerCounter = 0
-
-    @objc private func onTimer() {
-        if timerCounter == 0 {
-            repositionClockElements()
-            timerCounter = 10
-        }
-        timerCounter -= 1
-
-        if let m = window?.isMiniaturized, m {
-            window!.miniwindowImage = nil
-            secondHandLayer.isHidden = true
-        } else {
-            secondHandLayer.isHidden = false
-        }
+        repositionClockElements()
+        let timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(repositionClockElements), userInfo: nil, repeats: true)
+        timer.tolerance = 15.0
     }
 
     func draw(_ layer: CALayer, in ctx: CGContext) {
@@ -144,7 +137,7 @@ class ClockView : NSView, CALayerDelegate {
         }
     }
 
-    private func repositionClockElements() {
+    @objc private func repositionClockElements() {
         let secondAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
         let now = Date()
         let calendar = NSCalendar.current
