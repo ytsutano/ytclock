@@ -24,7 +24,11 @@ class ClockView: NSView, CALayerDelegate {
         }
         set {
             secondHandLayer.isHidden = newValue
-            repositionClockElements()
+            if newValue {
+                secondHandLayer.removeAllAnimations()
+            } else {
+                repositionClockElements()
+            }
         }
     }
 

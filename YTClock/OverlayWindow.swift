@@ -96,18 +96,17 @@ class OverlayWindow: NSWindow, NSWindowDelegate {
     }
 
     func windowDidMiniaturize(_ notification: Notification) {
-        clockView.isSecondHandHidden = true
         isClickable = false
         isMouseHovering = false
 
-        updateMiniwindow()
+        DispatchQueue.main.async {
+            self.updateMiniwindow()
+        }
         miniwindowUpdateTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(updateMiniwindow), userInfo: nil, repeats: true)
         miniwindowUpdateTimer?.tolerance = 3.0
     }
 
     func windowDidDeminiaturize(_ notification: Notification) {
-        clockView.isSecondHandHidden = false
-
         miniwindowUpdateTimer?.invalidate()
     }
 

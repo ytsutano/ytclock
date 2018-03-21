@@ -23,6 +23,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return true
     }
 
+    func applicationDidChangeOcclusionState(_ notification: Notification) {
+        clockView.isSecondHandHidden = !NSApp.occlusionState.contains(.visible)
+    }
+
     @IBAction func changeSweepingMode(_ sender: Any) {
         clockView.isSweepingEnabled = !clockView.isSweepingEnabled
         sweepingHandMenuItem.state = clockView.isSweepingEnabled ? .on : .off
