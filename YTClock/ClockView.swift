@@ -63,6 +63,9 @@ class ClockView: NSView, CALayerDelegate {
         repositionClockElements()
         let timer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(repositionClockElements), userInfo: nil, repeats: true)
         timer.tolerance = 10.0
+
+        NotificationCenter.default.addObserver(self, selector: #selector(repositionClockElements), name: NSNotification.Name.NSSystemClockDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(repositionClockElements), name: NSNotification.Name.NSSystemTimeZoneDidChange, object: nil)
     }
 
     func draw(_ layer: CALayer, in ctx: CGContext) {
