@@ -8,10 +8,14 @@
 
 import Cocoa
 
-class OverlayWindow : NSWindow {
-    private let normalOpacity : CGFloat = 1.0
-    private let clickableOpacity : CGFloat = 1.0
-    private let mouseHoveringOpacity : CGFloat = 0.2
+class OverlayWindow: NSWindow, NSWindowDelegate {
+    @IBOutlet weak var clockView: ClockView!
+
+    private let normalOpacity: CGFloat = 1.0
+    private let clickableOpacity: CGFloat = 1.0
+    private let mouseHoveringOpacity: CGFloat = 0.2
+
+    private var miniwindowUpdateTimer: Timer?
 
     private var isClickable = false {
         didSet {
@@ -28,10 +32,19 @@ class OverlayWindow : NSWindow {
     private func updateWindowState() {
         ignoresMouseEvents = !isClickable
         NSAnimationContext.current.duration = 0.3
+
         if isClickable {
             animator().alphaValue = clickableOpacity
         } else {
             animator().alphaValue = isMouseHovering ? mouseHoveringOpacity : normalOpacity
+        }
+
+        if isClickable && isMouseHovering {
+            backgroundColor = NSColor(white: 0.0, alpha: 0.8)
+            styleMask.formUnion(.titled)
+        } else {
+            backgroundColor = NSColor.clear
+            styleMask.subtract(.titled)
         }
     }
 
@@ -53,12 +66,18 @@ class OverlayWindow : NSWindow {
 
         // Register keyboard events.
         NSEvent.addGlobalMonitorForEvents(matching: .flagsChanged) { (event) in
-            self.isClickable = event.modifierFlags.contains(.option)
+            self.keyboardFlagsChanged(with: event)
         }
         NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { (event) -> NSEvent? in
-            self.isClickable = event.modifierFlags.contains(.option)
+            self.keyboardFlagsChanged(with: event)
             return event
         }
+
+        delegate = self
+    }
+
+    @objc private func keyboardFlagsChanged(with event: NSEvent) {
+        isClickable = event.modifierFlags.contains(.option)
     }
 
     override func mouseDown(with event: NSEvent) {
@@ -74,5 +93,26 @@ class OverlayWindow : NSWindow {
 
     override func mouseExited(with event: NSEvent) {
         isMouseHovering = false
+    }
+
+    func windowDidMiniaturize(_ notification: Notification) {
+        clockView.isSecondHandHidden = true
+        isClickable = false
+        isMouseHovering = false
+
+        updateMiniwindow()
+        miniwindowUpdateTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(updateMiniwindow), userInfo: nil, repeats: true)
+        miniwindowUpdateTimer?.tolerance = 3.0
+    }
+
+    func windowDidDeminiaturize(_ notification: Notification) {
+        clockView.isSecondHandHidden = false
+
+        miniwindowUpdateTimer?.invalidate()
+    }
+
+    @objc private func updateMiniwindow() {
+        // Update the clock image in the Dock.
+        miniwindowImage = nil
     }
 }

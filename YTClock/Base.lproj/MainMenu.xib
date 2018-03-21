@@ -15,19 +15,20 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="YTClock" customModuleProvider="target">
             <connections>
-                <outlet property="clockView" destination="QjG-Ez-4Kw" id="bnV-l0-i6U"/>
+                <outlet property="clockView" destination="QjG-Ez-4Kw" id="tKP-KD-wf4"/>
+                <outlet property="sweepingHandMenuItem" destination="0U5-ca-sFd" id="OcZ-aZ-pIq"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
-        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hasShadow="NO" showsToolbarButton="NO" frameAutosaveName="YTClockMainWindow" animationBehavior="default" id="QvC-M9-y7g" customClass="OverlayWindow" customModule="YTClock" customModuleProvider="target">
-            <windowStyleMask key="styleMask" miniaturizable="YES"/>
+        <window title="YTClock" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hasShadow="NO" showsToolbarButton="NO" frameAutosaveName="YTClockMainWindow" animationBehavior="default" tabbingMode="disallowed" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="QvC-M9-y7g" customClass="OverlayWindow" customModule="YTClock" customModuleProvider="target">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" fullSizeContentView="YES"/>
             <windowCollectionBehavior key="collectionBehavior" canJoinAllSpaces="YES" transient="YES" ignoresCycle="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="128" height="128"/>
+            <rect key="contentRect" x="335" y="390" width="128" height="143"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="900"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                <rect key="frame" x="0.0" y="0.0" width="128" height="143"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="QjG-Ez-4Kw" customClass="ClockView" customModule="YTClock" customModuleProvider="target">
@@ -35,7 +36,7 @@
                     </customView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="QjG-Ez-4Kw" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" id="IXS-DS-9Tk"/>
+                    <constraint firstItem="QjG-Ez-4Kw" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="15" id="Gm0-ds-B6e"/>
                     <constraint firstAttribute="trailing" secondItem="QjG-Ez-4Kw" secondAttribute="trailing" id="JTa-Uj-Mlz"/>
                     <constraint firstAttribute="bottom" secondItem="QjG-Ez-4Kw" secondAttribute="bottom" id="sId-ym-5GB"/>
                     <constraint firstItem="QjG-Ez-4Kw" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="xnV-in-Ypw"/>
@@ -44,6 +45,9 @@
                     <outlet property="menu" destination="agg-UY-VJe" id="vyZ-GH-hln"/>
                 </connections>
             </view>
+            <connections>
+                <outlet property="clockView" destination="QjG-Ez-4Kw" id="xi7-ic-BIK"/>
+            </connections>
             <point key="canvasLocation" x="-196" y="-441"/>
         </window>
         <menu id="agg-UY-VJe">
@@ -55,6 +59,13 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="Dg2-mY-aZo"/>
+                <menuItem title="Sweeping" id="0U5-ca-sFd">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="changeSweepingMode:" target="Voe-Tx-rLC" id="UYm-AX-ET3"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="zBB-1t-b7Q"/>
                 <menuItem title="Minimize" id="hiO-f9-FWa">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>

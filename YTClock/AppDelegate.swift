@@ -9,35 +9,23 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var clockView: ClockView!
-
-    var miniwindowTimer: Timer?
+    @IBOutlet weak var sweepingHandMenuItem: NSMenuItem!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        window.delegate = self
+        clockView.isSweepingEnabled = UserDefaults.standard.bool(forKey: "sweeping")
+        sweepingHandMenuItem.state = clockView.isSweepingEnabled ? .on : .off
     }
 
-    func applicationWillTerminate(_ aNotification: Notification) {
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        return true
     }
 
-    func windowDidMiniaturize(_ notification: Notification) {
-        clockView.isSecondHandHidden = true
-
-        updateMiniwindow()
-        miniwindowTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(updateMiniwindow), userInfo: nil, repeats: true)
-        miniwindowTimer?.tolerance = 3.0
-    }
-
-    func windowDidDeminiaturize(_ notification: Notification) {
-        clockView.isSecondHandHidden = false
-
-        miniwindowTimer?.invalidate()
-    }
-
-    @objc func updateMiniwindow() {
-        // Update the clock image in the Dock.
-        window.miniwindowImage = nil
+    @IBAction func changeSweepingMode(_ sender: Any) {
+        clockView.isSweepingEnabled = !clockView.isSweepingEnabled
+        sweepingHandMenuItem.state = clockView.isSweepingEnabled ? .on : .off
+        UserDefaults.standard.set(clockView.isSweepingEnabled, forKey: "sweeping")
     }
 }
