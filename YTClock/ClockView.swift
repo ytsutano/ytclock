@@ -182,11 +182,14 @@ class ClockView: NSView, CALayerDelegate {
         let minute = Double(calendar.component(.minute, from: now))
         let minuteRadian = -(minute / 60.0) * 2 * .pi
         let minuteAnimation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
-        let minuteKeyTimes = stride(from: second, through: duration + second, by: 5)
+        let minuteInterval = 5
+        let minuteUpdates = Int(ceil(duration / Double(minuteInterval)))
+        let minuteTotalDuration = minuteInterval * minuteUpdates + 60
+        let minuteKeyTimes = stride(from: 0, through: minuteTotalDuration, by: 5)
         minuteAnimation.beginTime = mediaTime - second
-        minuteAnimation.keyTimes = minuteKeyTimes.map { NSNumber(value: Double($0) / 60.0) }
+        minuteAnimation.keyTimes = minuteKeyTimes.map { NSNumber(value: Double($0) / Double(minuteTotalDuration)) }
         minuteAnimation.values = minuteKeyTimes.map { minuteRadian + Double($0) * (-2.0 * .pi) / 3600.0 }
-        minuteAnimation.duration = 60.0
+        minuteAnimation.duration = Double(minuteTotalDuration)
         minuteAnimation.calculationMode = kCAAnimationDiscrete
         minuteAnimation.fillMode = kCAFillModeForwards
         minuteAnimation.isRemovedOnCompletion = false
