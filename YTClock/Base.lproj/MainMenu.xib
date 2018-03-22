@@ -26,19 +26,26 @@
             <windowCollectionBehavior key="collectionBehavior" canJoinAllSpaces="YES" transient="YES" ignoresCycle="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="128" height="143"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="900"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="128" height="143"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <visualEffectView appearanceType="vibrantDark" blendingMode="behindWindow" material="ultraDark" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="LKB-Yx-e3Q">
+                        <rect key="frame" x="0.0" y="0.0" width="128" height="143"/>
+                    </visualEffectView>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="QjG-Ez-4Kw" customClass="ClockView" customModule="YTClock" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                     </customView>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="bottom" secondItem="LKB-Yx-e3Q" secondAttribute="bottom" id="2DT-yT-dmk"/>
                     <constraint firstItem="QjG-Ez-4Kw" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="15" id="Gm0-ds-B6e"/>
                     <constraint firstAttribute="trailing" secondItem="QjG-Ez-4Kw" secondAttribute="trailing" id="JTa-Uj-Mlz"/>
+                    <constraint firstItem="LKB-Yx-e3Q" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="QvI-aN-5YG"/>
                     <constraint firstAttribute="bottom" secondItem="QjG-Ez-4Kw" secondAttribute="bottom" id="sId-ym-5GB"/>
+                    <constraint firstItem="LKB-Yx-e3Q" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" id="tOZ-Za-k0Q"/>
+                    <constraint firstAttribute="trailing" secondItem="LKB-Yx-e3Q" secondAttribute="trailing" id="uq2-Fd-rVN"/>
                     <constraint firstItem="QjG-Ez-4Kw" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="xnV-in-Ypw"/>
                 </constraints>
                 <connections>
@@ -46,6 +53,7 @@
                 </connections>
             </view>
             <connections>
+                <outlet property="backgroundView" destination="LKB-Yx-e3Q" id="kTW-7N-JSr"/>
                 <outlet property="clockView" destination="QjG-Ez-4Kw" id="xi7-ic-BIK"/>
             </connections>
             <point key="canvasLocation" x="-196" y="-441"/>

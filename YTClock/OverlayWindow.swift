@@ -10,6 +10,7 @@ import Cocoa
 
 class OverlayWindow: NSWindow, NSWindowDelegate {
     @IBOutlet weak var clockView: ClockView!
+    @IBOutlet weak var backgroundView: NSVisualEffectView!
 
     private let normalOpacity: CGFloat = 1.0
     private let clickableOpacity: CGFloat = 1.0
@@ -40,10 +41,12 @@ class OverlayWindow: NSWindow, NSWindowDelegate {
         }
 
         if isClickable && isMouseHovering {
-            backgroundColor = NSColor(white: 0.0, alpha: 0.8)
+            backgroundView.isHidden = false
+            hasShadow = true
             styleMask.formUnion(.titled)
         } else {
-            backgroundColor = NSColor.clear
+            backgroundView.isHidden = true
+            hasShadow = false
             styleMask.subtract(.titled)
         }
     }
