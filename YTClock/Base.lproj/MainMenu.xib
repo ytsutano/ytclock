@@ -56,18 +56,18 @@
                 <outlet property="backgroundView" destination="LKB-Yx-e3Q" id="kTW-7N-JSr"/>
                 <outlet property="clockView" destination="QjG-Ez-4Kw" id="xi7-ic-BIK"/>
             </connections>
-            <point key="canvasLocation" x="-196" y="-441"/>
+            <point key="canvasLocation" x="-196" y="-441.5"/>
         </window>
         <menu id="agg-UY-VJe">
             <items>
                 <menuItem title="About YTClock" id="HPM-fk-9Bz">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="orderFrontStandardAboutPanel:" target="-3" id="81u-oi-Q6P"/>
+                        <action selector="orderFrontStandardAboutPanel:" target="-1" id="6OP-Ma-jeF"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="Dg2-mY-aZo"/>
-                <menuItem title="Sweeping" id="0U5-ca-sFd">
+                <menuItem title="Sweeping Hands" id="0U5-ca-sFd">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="changeSweepingMode:" target="Voe-Tx-rLC" id="UYm-AX-ET3"/>
@@ -83,11 +83,11 @@
                 <menuItem title="Quit YTClock" id="2Wv-ID-IIo">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="terminate:" target="-3" id="OaB-Kd-BzA"/>
+                        <action selector="terminate:" target="-1" id="fyw-xm-d4K"/>
                     </connections>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="-207" y="-268"/>
+            <point key="canvasLocation" x="-202" y="-269"/>
         </menu>
     </objects>
 </document>
