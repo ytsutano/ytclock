@@ -152,13 +152,20 @@ class ClockView: NSView, CALayerDelegate {
     }
 
     @objc private func repositionClockElements() {
-        let duration = 45.0
+        let minimumAnimationDuration = 45.0
+        let minuteHandUpdateInterval = 5
 
+        // Get the current time in two forms.
         let now = Date()
-        let calendar = NSCalendar.current
         let mediaTime = CACurrentMediaTime()
-        let second = now.timeIntervalSince1970.truncatingRemainder(dividingBy: 60)
 
+        // Get the time components.
+        let calendar = NSCalendar.current
+        let second = now.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 60)
+        let minute = Double(calendar.component(.minute, from: now))
+        let hour = Double(calendar.component(.hour, from: now)) + minute / 60.0
+
+        // Animate the second hand.
         if !isSecondHandHidden {
             if isSweepingEnabled {
                 let secondAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
@@ -166,7 +173,7 @@ class ClockView: NSView, CALayerDelegate {
                 secondAnimation.fromValue = 0
                 secondAnimation.toValue = -2.0 * .pi
                 secondAnimation.duration = 60.0
-                secondAnimation.repeatDuration = duration + second
+                secondAnimation.repeatDuration = minimumAnimationDuration + second
                 secondHandLayer.add(secondAnimation, forKey: "rotate")
             } else {
                 let secondKeyTimes = 0...60
@@ -178,18 +185,17 @@ class ClockView: NSView, CALayerDelegate {
                 secondAnimation.calculationMode = kCAAnimationDiscrete
                 secondAnimation.fillMode = kCAFillModeForwards
                 secondAnimation.isRemovedOnCompletion = false
-                secondAnimation.repeatDuration = duration + second
+                secondAnimation.repeatDuration = minimumAnimationDuration + second
                 secondHandLayer.add(secondAnimation, forKey: "rotate")
             }
         }
 
-        let minute = Double(calendar.component(.minute, from: now))
+        // Animate the minute hand.
         let minuteRadian = -(minute / 60.0) * 2 * .pi
+        let minuteNumberOfUpdates = Int(((minimumAnimationDuration + second) / Double(minuteHandUpdateInterval)).rounded(.up))
+        let minuteTotalDuration = minuteHandUpdateInterval * minuteNumberOfUpdates
+        let minuteKeyTimes = stride(from: 0, through: minuteTotalDuration, by: minuteHandUpdateInterval)
         let minuteAnimation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
-        let minuteInterval = 5
-        let minuteUpdates = Int(ceil(duration / Double(minuteInterval)))
-        let minuteTotalDuration = minuteInterval * minuteUpdates + 60
-        let minuteKeyTimes = stride(from: 0, through: minuteTotalDuration, by: 5)
         minuteAnimation.beginTime = mediaTime - second
         minuteAnimation.keyTimes = minuteKeyTimes.map { NSNumber(value: Double($0) / Double(minuteTotalDuration)) }
         minuteAnimation.values = minuteKeyTimes.map { minuteRadian + Double($0) * (-2.0 * .pi) / 3600.0 }
@@ -199,8 +205,8 @@ class ClockView: NSView, CALayerDelegate {
         minuteAnimation.isRemovedOnCompletion = false
         minuteHandLayer.add(minuteAnimation, forKey: "rotate")
 
-        let hour = CGFloat(calendar.component(.hour, from: now)) + CGFloat(minute) / 60.0
+        // Set the hour hand position.
         let hourRadian = -(hour / 12.0) * 2 * .pi
-        hourHandLayer.transform = CATransform3DMakeRotation(hourRadian, 0.0, 0.0, 1.0)
+        hourHandLayer.transform = CATransform3DMakeRotation(CGFloat(hourRadian), 0.0, 0.0, 1.0)
     }
 }
