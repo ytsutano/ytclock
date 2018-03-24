@@ -59,7 +59,8 @@ class OverlayWindow: NSWindow, NSWindowDelegate {
         level = .statusBar
 
         // Allow mouse enter/exit event to be generated.
-        contentView?.addTrackingRect(contentView!.bounds, owner: self, userData: nil, assumeInside: false)
+        let trackingArea = NSTrackingArea(rect: contentView!.bounds, options: [.mouseEnteredAndExited, .activeAlways, .enabledDuringMouseDrag], owner: self, userInfo: nil)
+        contentView?.addTrackingArea(trackingArea)
 
         // Make the window draggable.
         isMovableByWindowBackground = true
