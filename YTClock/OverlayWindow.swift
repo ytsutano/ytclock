@@ -18,15 +18,19 @@ class OverlayWindow: NSWindow, NSWindowDelegate {
 
     private var miniwindowUpdateTimer: Timer?
 
-    private var isClickable = false {
+    private var isClickable = true {
         didSet {
-            updateWindowState()
+            if isClickable != oldValue {
+                updateWindowState()
+            }
         }
     }
 
     private var isMouseHovering = false {
         didSet {
-            updateWindowState()
+            if isMouseHovering != oldValue {
+                updateWindowState()
+            }
         }
     }
 
