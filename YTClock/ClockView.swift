@@ -154,6 +154,7 @@ class ClockView: NSView, CALayerDelegate {
     @objc private func repositionClockElements() {
         let minimumAnimationDuration = 45.0
         let minuteHandUpdateInterval = 5
+        let hourHandUpdateInterval = 10
 
         // Get the current time in two forms.
         let now = Date()
@@ -163,7 +164,7 @@ class ClockView: NSView, CALayerDelegate {
         let calendar = NSCalendar.current
         let second = now.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 60)
         let minute = Double(calendar.component(.minute, from: now))
-        let hour = Double(calendar.component(.hour, from: now)) + minute / 60.0
+        let hour = Double(calendar.component(.hour, from: now))
 
         // Animate the second hand.
         if !isSecondHandHidden {
@@ -198,15 +199,26 @@ class ClockView: NSView, CALayerDelegate {
         let minuteAnimation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
         minuteAnimation.beginTime = mediaTime - second
         minuteAnimation.keyTimes = minuteKeyTimes.map { NSNumber(value: Double($0) / Double(minuteTotalDuration)) }
-        minuteAnimation.values = minuteKeyTimes.map { minuteRadian + Double($0) * (-2.0 * .pi) / 3600.0 }
+        minuteAnimation.values = minuteKeyTimes.map { minuteRadian + Double($0) * (-2.0 * .pi) / (60.0 * 60.0) }
         minuteAnimation.duration = Double(minuteTotalDuration)
         minuteAnimation.calculationMode = kCAAnimationDiscrete
         minuteAnimation.fillMode = kCAFillModeForwards
         minuteAnimation.isRemovedOnCompletion = false
         minuteHandLayer.add(minuteAnimation, forKey: "rotate")
 
-        // Set the hour hand position.
-        let hourRadian = -(hour / 12.0) * 2 * .pi
-        hourHandLayer.transform = CATransform3DMakeRotation(CGFloat(hourRadian), 0.0, 0.0, 1.0)
+        // Animate the hour hand.
+        let hourRadian = -((hour + minute / 60.0) / 12.0) * 2 * .pi
+        let hourNumberOfUpdates = Int(((minimumAnimationDuration + second) / Double(hourHandUpdateInterval)).rounded(.up))
+        let hourTotalDuration = hourHandUpdateInterval * hourNumberOfUpdates
+        let hourKeyTimes = stride(from: 0, through: hourTotalDuration, by: hourHandUpdateInterval)
+        let hourAnimation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
+        hourAnimation.beginTime = mediaTime - second
+        hourAnimation.keyTimes = hourKeyTimes.map { NSNumber(value: Double($0) / Double(hourTotalDuration)) }
+        hourAnimation.values = hourKeyTimes.map { hourRadian + Double($0) * (-2.0 * .pi) / (60.0 * 60.0 * 24.0) }
+        hourAnimation.duration = Double(hourTotalDuration)
+        hourAnimation.calculationMode = kCAAnimationDiscrete
+        hourAnimation.fillMode = kCAFillModeForwards
+        hourAnimation.isRemovedOnCompletion = false
+        hourHandLayer.add(hourAnimation, forKey: "rotate")
     }
 }
