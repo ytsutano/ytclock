@@ -72,6 +72,10 @@ class ClockView: NSView, CALayerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(repositionClockElements), name: NSNotification.Name.NSSystemTimeZoneDidChange, object: nil)
     }
 
+    override func layer(_ layer: CALayer, shouldInheritContentsScale newScale: CGFloat, from window: NSWindow) -> Bool {
+        return true
+    }
+
     func draw(_ layer: CALayer, in ctx: CGContext) {
         switch layer {
         case dialLayer:
