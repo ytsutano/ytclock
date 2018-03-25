@@ -84,7 +84,7 @@ class OverlayWindow: NSWindow, NSWindowDelegate {
         delegate = self
     }
 
-    @objc private func keyboardFlagsChanged(with event: NSEvent) {
+    private func keyboardFlagsChanged(with event: NSEvent) {
         isClickable = event.modifierFlags.contains(.option)
     }
 
